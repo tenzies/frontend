@@ -6,15 +6,24 @@
   box-sizing: border-box;
   overflow-y: hidden;
   overflow-x: hidden;
+  font-family: 'Karla', sans-serif !important;
 }
 
 body {
-  font-family: 'Karla', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100vw;
+  height: 100vh;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  --first-color: #0E2954;
+  --second-color: #1F6E8C;
+  --third-color: #2E8A99;
+  --fourth-color: #84A7A1;
 }

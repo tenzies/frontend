@@ -5,10 +5,10 @@ import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import styled from "styled-components";
 
-export default function Login() {
+export default function Signup() {
     return (
-        <LoginContainer>
-            <h2>Login</h2>
+        <SignupContainer>
+            <h2>Create an account</h2>
             <div className='input-container'>
               <div className='label-container'>
                 <PersonRoundedIcon className='icon left'/>
@@ -23,14 +23,14 @@ export default function Login() {
               </div>
               <input  type='password'/>
             </div>
-            <button>Login</button>
+            <button>Sign Up</button>
             <hr/>
-            <p>Don't have an account? <Link to="/signup">Create one</Link></p>
-        </LoginContainer>
+            <p>Already have an account? <Link to="/login">Login</Link></p>
+        </SignupContainer>
     )
 }
 
-const LoginContainer = styled.form`
+const SignupContainer = styled.form`
 display: flex;
 flex-flow: column;
 align-items: center;
