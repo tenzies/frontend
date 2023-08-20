@@ -1,10 +1,10 @@
-import Confetti from 'react-confetti'
-import styled from 'styled-components'
+import Confetti from 'react-confetti';
+import styled from 'styled-components';
 
-export default function Background(props) {
+export default function Background({won}) {
   return (
     <>
-      {props.won && <Confetti width={window.innerWidth} height={window.innerHeight}/>}
+      {won && <Confetti width={window.innerWidth} height={window.innerHeight}/>}
       <Area>
             <ul className="circles">
                     <li></li>

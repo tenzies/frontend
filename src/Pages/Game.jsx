@@ -1,51 +1,115 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
+import { useEffect, useState, useCallback } from 'react';
+import { generateOneSquare, generateSquares } from '../Utilities/Helpers/SquareGenerators';
+import GameButton from '../Components/Game-Components/GameButton';
+import Background from "../Utilities/Assets/Background";
+import Components from '../Components/Components';
+
+const usePageVisibility = () => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsVisible(!document.hidden);
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  return isVisible;
+};
 
 export default function Game() {
+  const [squares, setSquares] = useState(generateSquares());
+  const [isStarted, setIsStarted] = useState(false);
+  const [startTime, setStartTime] = useState({ milliseconds: 0, seconds: 0, minutes: 0 });
+  const [rollCount, setRollCount] = useState(0);
+  const [timerInterval, setTimerInterval] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [won, setWon] = useState(false);
+  
+  // Time handling callbacks
+
+    const startTimer = useCallback(() => {
+      const newTimerInterval = setInterval(() => {
+        setStartTime((oldTime) => ({
+          milliseconds: oldTime.milliseconds === 100 ? 0 : oldTime.milliseconds + 1,
+          seconds: oldTime.milliseconds === 100 ? oldTime.seconds + 1 : oldTime.seconds === 60 ? 0 : oldTime.seconds,
+          minutes: oldTime.seconds === 60 ? oldTime.minutes + 1 : oldTime.minutes === 60 ? 0 : oldTime.minutes,
+        }));
+      }, 10);
+      setTimerInterval(newTimerInterval)
+    }, []);
+
+    const stopTimer = useCallback(() => {
+      clearInterval(timerInterval)
+      setTimerInterval(null)
+    }, [timerInterval]);
+
+  // Square Handling functions
+
+    function rollSquare() {
+      if (won) {
+        setSquares(generateSquares())
+        setWon(false)
+      } else {
+        setSquares(oldSquare => oldSquare.map(die => die.isHeld ? die : generateOneSquare()))
+      }
+    }
+
+    function holdSquare(id) {
+      const newDice = squares.map(die => die.id === id ? {...die, isHeld: !die.isHeld }: die)
+      setSquares(newDice)
+    }
+
+  // State update checking functions
+
+    const isVisible = usePageVisibility();
+  
+    // Check if user won, or went away from screen
+    useEffect(() => {
+      if (isOpen) stopTimer()
+      else if(isOpen) startTimer();
+      if (won) stopTimer();
+      else if (!isOpen && isVisible && isStarted && !timerInterval) startTimer();
+      else if (isOpen && !isVisible && timerInterval) stopTimer();
+    }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen, startTime]);
+
+    // Check if the user held all the squares to same values
+    useEffect(()=> {
+      const allHeld = squares.every(die => die.isHeld)
+      const sameValue = squares.every(die => die.value === squares[0].value)
+      if(allHeld && sameValue) {
+        setWon(true)
+      }
+    }, [squares])
+    
   return (
     <GameContainer>
-      <h2>Tenzies</h2>
-      <button>Roll</button>
+      <Components
+        squares={squares}
+        setSquares={setSquares}
+        holdSquare={holdSquare}
+        won={won}
+        setWon={setWon}
+        rollSquare={rollSquare}
+        rollCount={rollCount}
+        setRollCount={setRollCount}
+        setIsStarted={setIsStarted}
+        isStarted={isStarted}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        startTimer={startTimer}
+      />
+      <Background won={won}/>
     </GameContainer>
   )
 }
 
 const GameContainer = styled.div`
-display: flex;
-flex-flow: column;
-align-items: center;
-gap: 20px;
-position: absolute;
-max-width: 500px;
-min-width: 350px;
-left: 50%;
-top: 50%;
-transform: translate(-50%, -50%);
-background-color: #99999920;
-color: var(--fourth-color);
-padding: 30px;
-z-index: 1;
-border: 2px solid var(--fourth-color);
-border-radius: 15px;
-h2 {
-  color: var(--third-color);
-  margin-bottom: 5px;
-}
-button {
-  padding: 12.5px 20px;
-  margin: 10px 0;
-  background-color: var(--third-color);
-  border: 0;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  letter-spacing: 1px;
-  font-size: 18px;
-  &:hover {
-    cursor: pointer;
-    background-color: var(--second-color);
-  }
-  &:active {
-    transform: scale(95%);
-  }
-}
+
 `

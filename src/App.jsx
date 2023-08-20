@@ -1,8 +1,7 @@
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Game from "./Pages/Game";
-import Background from "./Assets/Background";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { Routes, Route } from "react-router-dom";
 
 export default function App() {
@@ -13,7 +12,6 @@ export default function App() {
         <Route path="/login" element={<Login />}/>
         <Route path="/signup" element={<Signup />}/>
       </Routes>
-      <Background/>
     </>
   );
 }
