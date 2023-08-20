@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700;800&display=swap');
 
 *{
-  margin: 0px;
-  padding: 0px;
+  margin: unset;
+  padding: unset;
   box-sizing: border-box;
   overflow-y: hidden;
   overflow-x: hidden;
