@@ -2,13 +2,21 @@ import styled from 'styled-components'
 import Counters from './Game-Components/Counters/Counters'
 import Square from './Game-Components/Square'
 import GameButton from './Game-Components/GameButton'
+import { useState } from 'react';
+import Options from './User-Options/Options';
+import { TryRounded } from '@mui/icons-material';
 // import { useEffect, useState, useCallback } from 'react';
 
 export default function Components (props) {
 
+  const toggleModal = () => {
+    props.setIsOpen(!props.isOpen)
+  }
   return (
     <ComponentsContainer>
       <h2>{props.won ? "You Won!" : "Tenzis"}</h2>
+      
+      <Options isOpen={props.isOpen} onClick={toggleModal} toggleModal={toggleModal}/>
       <SquaresContainer>
         {props.squares.map(e => <Square {...e} {...props} />)}
       </SquaresContainer>
@@ -25,7 +33,7 @@ const ComponentsContainer = styled.div`
 display: flex;
 flex-flow: column;
 align-items: center;
-gap: 20px;
+gap: 10px;
 position: absolute;
 max-width: 500px;
 min-width: 350px;
@@ -52,4 +60,5 @@ padding: 20px;
 align-content: center;
 align-items: stretch;
 justify-content: center;
+margin-bottom: 10px;
 `
