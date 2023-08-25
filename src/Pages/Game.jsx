@@ -103,7 +103,10 @@ export default function Game() {
         isStarted={isStarted}
         startTime={startTime}
         setStartTime={setStartTime}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         startTimer={startTimer}
+        stopTimer={stopTimer}
       />
       <Background won={won}/>
     </GameContainer>

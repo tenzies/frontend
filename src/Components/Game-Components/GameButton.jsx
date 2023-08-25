@@ -1,9 +1,15 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
+import {useState} from 'react';
 
 export default function GameButton(props) {
+  const [isClicked, setIsClicked] = useState(false);
+
   function buttonHandler() {
     const {rollSquare, setRollCount, setIsStarted, won, setWon, isStarted, setStartTime, startTimer} = props
     rollSquare();
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 250); 
     if (won) {
       setRollCount(0);
       setIsStarted(false);
@@ -18,12 +24,22 @@ export default function GameButton(props) {
     }
   }
   return (
-    <Button onClick={buttonHandler}>Roll</Button>
+    <Button 
+      className={isClicked ? 'clicked-button' : ''}
+      onClick={buttonHandler}
+      >
+      <RefreshRoundedIcon
+        className={isClicked ? 'rotate-animation' : ''}
+        />Refresh
+    </Button>
   )
 }
 
 const Button = styled.button`
-padding: 12.5px 20px;
+display: flex;
+align-items: center;
+gap: 5px;
+padding: 12.5px 18px;
 background-color: var(--third-color);
 border: 0;
 border-radius: 5px;
@@ -35,7 +51,20 @@ font-size: 18px;
   cursor: pointer;
   background-color: var(--second-color);
 }
-&:active {
-  transform: scale(95%);
+&.clicked-button {
+  transform: scale(98%);
+  box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
+}
+.rotate-animation {
+  animation: rotate 0.25s linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  },
+  100% {
+    transform: rotate(360deg);
+  }
 }
 `

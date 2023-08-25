@@ -3,10 +3,12 @@ import { useState } from 'react';
 import { Link, useNavigate  } from 'react-router-dom'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
+import Background from "../Utilities/Assets/Background";
 import styled from "styled-components";
 
 export default function Signup() {
     return (
+        <>
         <SignupContainer>
             <h2>Create an account</h2>
             <div className='input-container'>
@@ -27,6 +29,8 @@ export default function Signup() {
             <hr/>
             <p>Already have an account? <Link to="/login">Login</Link></p>
         </SignupContainer>
+        <Background/>
+        </>
     )
 }
 
