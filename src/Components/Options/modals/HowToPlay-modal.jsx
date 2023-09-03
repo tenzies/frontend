@@ -1,13 +1,9 @@
 import styled from 'styled-components'
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import {useState} from 'react';
 import Modal from '@mui/material/Modal';
 
-
-
-export default function HowToPlay() {
-  const [open, setOpen] = useState(false);
+export default function HowToPlay({open, setOpen}) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 

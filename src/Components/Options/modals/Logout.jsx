@@ -1,9 +1,11 @@
 import styled from 'styled-components'
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import { LogoutHandler } from '../../../Utilities/Helpers/UserHandlers';
 
 export default function Logout() {
+  const logout = LogoutHandler()
   return (
-    <LogoutContainer>
+    <LogoutContainer onClick={logout}>
       <LogoutRoundedIcon/><span>Logout</span>
     </LogoutContainer>
   )

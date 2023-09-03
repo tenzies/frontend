@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import { useEffect, useState, useCallback } from 'react';
 import { generateOneSquare, generateSquares } from '../Utilities/Helpers/SquareGenerators';
-import GameButton from '../Components/Game-Components/GameButton';
+import { UpdateHandler, useIsLoggedIn } from '../Utilities/Helpers/UserHandlers';
+import {toMilliSeconds} from '../Utilities/Helpers/Time'
+import { ToastContainer } from 'react-toastify';
 import Background from "../Utilities/Assets/Background";
 import Components from '../Components/Components';
 
@@ -22,21 +24,23 @@ const usePageVisibility = () => {
 
   return isVisible;
 };
-
 export default function Game() {
   const [squares, setSquares] = useState(generateSquares());
   const [isStarted, setIsStarted] = useState(false);
-  const [startTime, setStartTime] = useState({ milliseconds: 0, seconds: 0, minutes: 0 });
+  const [timeCount, setTimeCount] = useState({ milliseconds: 0, seconds: 0, minutes: 0 });
   const [rollCount, setRollCount] = useState(0);
   const [timerInterval, setTimerInterval] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [won, setWon] = useState(false);
   
-  // Time handling callbacks
+  // State update checking functions
+  const isVisible = usePageVisibility();
+  const isLoggedIn = useIsLoggedIn()
 
+  // Time handling callbacks
     const startTimer = useCallback(() => {
       const newTimerInterval = setInterval(() => {
-        setStartTime((oldTime) => ({
+        setTimeCount((oldTime) => ({
           milliseconds: oldTime.milliseconds === 100 ? 0 : oldTime.milliseconds + 1,
           seconds: oldTime.milliseconds === 100 ? oldTime.seconds + 1 : oldTime.seconds === 60 ? 0 : oldTime.seconds,
           minutes: oldTime.seconds === 60 ? oldTime.minutes + 1 : oldTime.minutes === 60 ? 0 : oldTime.minutes,
@@ -44,14 +48,12 @@ export default function Game() {
       }, 10);
       setTimerInterval(newTimerInterval)
     }, []);
-
     const stopTimer = useCallback(() => {
       clearInterval(timerInterval)
       setTimerInterval(null)
     }, [timerInterval]);
 
   // Square Handling functions
-
     function rollSquare() {
       if (won) {
         setSquares(generateSquares())
@@ -60,34 +62,44 @@ export default function Game() {
         setSquares(oldSquare => oldSquare.map(die => die.isHeld ? die : generateOneSquare()))
       }
     }
-
     function holdSquare(id) {
       const newDice = squares.map(die => die.id === id ? {...die, isHeld: !die.isHeld }: die)
       setSquares(newDice)
     }
-
-  // State update checking functions
-
-    const isVisible = usePageVisibility();
-  
-    // Check if user won, or went away from screen
-    useEffect(() => {
-      if (isOpen) stopTimer()
-      else if(isOpen) startTimer();
-      if (won) stopTimer();
-      else if (!isOpen && isVisible && isStarted && !timerInterval) startTimer();
-      else if (isOpen && !isVisible && timerInterval) stopTimer();
-    }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen, startTime]);
-
+    
     // Check if the user held all the squares to same values
     useEffect(()=> {
       const allHeld = squares.every(die => die.isHeld)
       const sameValue = squares.every(die => die.value === squares[0].value)
       if(allHeld && sameValue) {
-        setWon(true)
+        setWon(true);
+        stopTimer();
+        const msTime = toMilliSeconds(timeCount);
+        UpdateHandler(msTime);
+        setIsStarted(false);
       }
-    }, [squares])
-    
+    }, [squares, stopTimer, timeCount])
+
+    // Check if user went away from screen
+    useEffect(() => {
+      if (!isOpen && isVisible && isStarted && !timerInterval) startTimer();
+      else if (isOpen || !isVisible ) stopTimer();
+    }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen, timeCount]);
+
+    // Checks if the user is loggedIn
+    useEffect(() => {
+      const handleStorageChange = (e) => {
+        if (e.key === 'user_data') {
+          isLoggedIn()
+        }
+      };
+      window.addEventListener('storage', handleStorageChange);
+      // Cleanup the event listener on component unmount
+      return () => {
+        window.removeEventListener('storage', handleStorageChange);
+      };
+    }, [won, timeCount, isLoggedIn, stopTimer])
+
   return (
     <GameContainer>
       <Components
@@ -101,14 +113,15 @@ export default function Game() {
         setRollCount={setRollCount}
         setIsStarted={setIsStarted}
         isStarted={isStarted}
-        startTime={startTime}
-        setStartTime={setStartTime}
+        timeCount={timeCount}
+        setTimeCount={setTimeCount}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         startTimer={startTimer}
         stopTimer={stopTimer}
       />
       <Background won={won}/>
+      <ToastContainer/>
     </GameContainer>
   )
 }

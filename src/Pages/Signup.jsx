@@ -1,12 +1,34 @@
-import axios from 'axios';
 import { useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { SignupHandler } from '../Utilities/Helpers/UserHandlers';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import Background from "../Utilities/Assets/Background";
 import styled from "styled-components";
+import Loader from '../Utilities/Assets/Loader';
 
 export default function Signup() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    username: "",
+    password: ""
+  });
+  
+  const signup = SignupHandler(formData, setIsLoading);
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    signup();
+  }
+  const changeHandler = (e) => {
+    const {name, value} = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    })
+  }
     return (
         <>
         <SignupContainer>
@@ -16,19 +38,30 @@ export default function Signup() {
                 <PersonRoundedIcon className='icon left'/>
                 <span>Username</span>
               </div>
-              <input type='text'/>
+              <input
+                type='text'
+                name='username'
+                value={formData.username}
+                onChange={changeHandler}
+                />
             </div>
             <div className='input-container'>
             <div className='label-container'>
                 <KeyRoundedIcon className='icon left'/>
                 <span>Password</span>
               </div>
-              <input  type='password'/>
+              <input
+                type='password'
+                name='password'
+                value={formData.password}
+                onChange={changeHandler}
+                />
             </div>
-            <button>Sign Up</button>
+            <button onClick={submitHandler}>{isLoading ? <Loader/> : "Signup"}</button>
             <hr/>
             <p>Already have an account? <Link to="/login">Login</Link></p>
         </SignupContainer>
+        <ToastContainer/>
         <Background/>
         </>
     )
@@ -78,7 +111,11 @@ h2 {
   }
 }
 button {
-  padding: 12.5px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  min-height: 50px;
   margin: 10px 0;
   background-color: var(--third-color);
   border: 0;
