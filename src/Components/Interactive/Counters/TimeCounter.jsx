@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 
-export default function TimeCounter({startTime}) {
-  const milliseconds = startTime.milliseconds.toString().padStart(2, '0');
-  const seconds = startTime.seconds.toString().padStart(2, '0');
-  const minutes = startTime.minutes.toString().padStart(2, '0');
+export default function TimeCounter({timeCount}) {
+  const milliseconds = timeCount.milliseconds.toString().padStart(2, '0');
+  const seconds = timeCount.seconds.toString().padStart(2, '0');
+  const minutes = timeCount.minutes.toString().padStart(2, '0');
   return (
         <TimerContainer>
           <AccessTimeRoundedIcon/>

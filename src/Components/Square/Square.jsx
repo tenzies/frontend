@@ -12,7 +12,7 @@ export default function Square(props) {
   return(
     <SquareContainer
       className={props.isHeld ? 'held' : ""}
-      key={props.id}
+      id={props.id}
       onClick={squareHandler}
     >
       {props.value}
@@ -32,6 +32,7 @@ const SquareContainer = styled.div`
   color: var(--first-color);
   &:hover {
     cursor: pointer;
+    filter: invert(10%)
   }
   &.held {
     background-color: #59E391 !important;

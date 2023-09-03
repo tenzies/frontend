@@ -1,7 +1,6 @@
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Game from "./Pages/Game";
-// import styled from "styled-components";
 import { Routes, Route } from "react-router-dom";
 
 export default function App() {

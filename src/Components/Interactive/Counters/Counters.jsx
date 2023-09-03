@@ -7,7 +7,7 @@ export default function Counters(props) {
     <CountersContainer>
       <TimeCounter
         won={props.won}
-        startTime={props.startTime}
+        timeCount={props.timeCount}
         isStarted={props.isStarted}
       />
       <RollCounter rollCount={props.rollCount}/>

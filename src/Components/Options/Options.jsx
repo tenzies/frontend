@@ -10,6 +10,9 @@ import Modal from '@mui/material/Modal';
 
 export default function Options({toggleModal}) {
   const [open, setOpen] = useState(false);
+  const [openLeaderboard, setOpenLeaderboard] = useState(false);
+  const [openHowToPlay, setOpenHowToPlay] = useState(false);
+
   const handleOpen = () => {
     setOpen(true);
     toggleModal();
@@ -31,8 +34,8 @@ export default function Options({toggleModal}) {
           <OptionsContainer>
             <ArrowCircleLeftRoundedIcon className='back-button' onClick={handleClose}/>
             <h3>Options</h3>
-            <HowToPlay/>
-            <Leaderboard/>
+            <HowToPlay open={openHowToPlay} setOpen={setOpenHowToPlay}/>
+            <Leaderboard open={openLeaderboard} setOpen={setOpenLeaderboard}/>
             <Logout/>
           </OptionsContainer>
       </Modal>
@@ -42,11 +45,14 @@ export default function Options({toggleModal}) {
 
 const MainModal = styled.div`
 .vert-icon {
+  color: var(--fourth-color);
   position: absolute;
+  font-size: 30px;
   right: 30px;
   top: 30px;
   &:hover {
     cursor: pointer;
+    filter: invert(50%);
   }
 }
 `
