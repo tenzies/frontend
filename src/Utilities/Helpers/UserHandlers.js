@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import showToastify from './Toastify';
 
 const url = process.env.REACT_APP_SERVER_URL;
@@ -7,8 +7,16 @@ const url = process.env.REACT_APP_SERVER_URL;
 export function SignupHandler(formData, setIsLoading) {
   const navigate = useNavigate();
   return async function signup() {
-    setIsLoading(true);
-    const { data } = await axios.post(url + '/api/signup', formData);
+    setIsLoading(true); 
+    const {username, password} = formData;
+    const encodedData = btoa(`${username}:${password}`);
+    const { data } = await axios({
+      'method': 'POST',
+      'url': url + '/api/signup',
+      'headers': {
+        'Authorization': `Basic ${encodedData}`
+      }
+    });
     showToastify(data.status, data.msg);
     if(data.status === 201) {
     setTimeout(() => {
@@ -25,7 +33,15 @@ export function LoginHandler(formData, setIsLoading) {
   const navigate = useNavigate();
   return async function login() {
     setIsLoading(true)
-    const {data} = await axios.post(url + '/api/login', formData);
+    const {username, password} = formData;
+    const encodedData = btoa(`${username}:${password}`);
+    const { data } = await axios({
+      'method': 'POST',
+      'url': url + '/api/login',
+      'headers': {
+        'Authorization': `Basic ${encodedData}`
+      }
+    });
     showToastify(data.status, data.msg);
     if(data.status === 200) {
       setTimeout(() => {

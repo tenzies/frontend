@@ -36,6 +36,9 @@ export default function Game() {
   // State update checking functions
   const isVisible = usePageVisibility();
   const isLoggedIn = useIsLoggedIn()
+  useEffect(() => {
+    isLoggedIn()
+  }, [isLoggedIn])
 
   // Time handling callbacks
     const startTimer = useCallback(() => {
@@ -86,7 +89,7 @@ export default function Game() {
       else if (isOpen || !isVisible ) stopTimer();
     }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen, timeCount]);
 
-    // Checks if the user is loggedIn
+    // Checks if the user is loggedOut, or changes occured to the data in localStorage
     useEffect(() => {
       const handleStorageChange = (e) => {
         if (e.key === 'user_data') {
