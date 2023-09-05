@@ -66,8 +66,10 @@ top: 50%;
 background-color: white;
 padding: 20px;
 border-radius: 10px;
-min-width: 300px;
-max-width: 350px;
+width: 400px;
+@media (max-width: 575px) {
+  width: 320px;
+}
 transform: translate(-50%, -50%);
 display: flex;
 flex-flow: column;

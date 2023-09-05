@@ -14,11 +14,11 @@ export default function GameButton(props) {
       setRollCount(0);
       setIsStarted(false);
       setWon(false);
+      setHasUpdated(false);
       setTimeCount({ milliseconds: 0, seconds: 0, minutes: 0 });
     } else {
       setRollCount((prevRollCount) => prevRollCount + 1);
       if (!isStarted) {
-        setHasUpdated(false)
         setIsStarted(true);
         startTimer();
       }
@@ -39,6 +39,7 @@ export default function GameButton(props) {
 const Button = styled.button`
 display: flex;
 align-items: center;
+justify-self: center;
 gap: 5px;
 padding: 12.5px 18px;
 background-color: var(--third-color);
@@ -63,7 +64,17 @@ font-size: 18px;
 .rotate-animation {
   animation: rotate 0.25s linear;
 }
-
+@media (max-width: 575px) {
+  font-size: 14px;
+  & svg {
+    font-size: 14px;
+  }
+  padding: 12px;
+  &.new-game {
+    font-size: 12px !important;
+    padding: 12px 8px !important;
+  }
+}
 @keyframes rotate {
   0% {
     transform: rotate(0deg);

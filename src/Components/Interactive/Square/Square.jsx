@@ -39,5 +39,9 @@ const SquareContainer = styled.div`
     background-color: #59E391 !important;
     color: white;
   }
+  @media (max-width: 575px) {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
 }
 `

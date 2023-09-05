@@ -33,7 +33,6 @@ export default function Game() {
   const [isOpen, setIsOpen] = useState(false);
   const [won, setWon] = useState(false);
   const [hasUpdated, setHasUpdated] = useState(false)
-  
   // State update checking functions
   const isVisible = usePageVisibility();
   const isLoggedIn = useIsLoggedIn()
@@ -101,7 +100,7 @@ export default function Game() {
         }
       };
       window.addEventListener('storage', handleStorageChange);
-      // Cleanup the event listener on component unmount
+
       return () => {
         window.removeEventListener('storage', handleStorageChange);
       };
