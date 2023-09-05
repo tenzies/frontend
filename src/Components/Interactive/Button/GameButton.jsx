@@ -6,7 +6,7 @@ export default function GameButton(props) {
   const [isClicked, setIsClicked] = useState(false);
 
   function buttonHandler() {
-    const {rollSquare, setRollCount, setIsStarted, won, setWon, isStarted, setTimeCount, startTimer} = props
+    const {rollSquare, setRollCount, setHasUpdated, setIsStarted, won, setWon, isStarted, setTimeCount, startTimer} = props
     rollSquare();
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 250); 
@@ -18,6 +18,7 @@ export default function GameButton(props) {
     } else {
       setRollCount((prevRollCount) => prevRollCount + 1);
       if (!isStarted) {
+        setHasUpdated(false)
         setIsStarted(true);
         startTimer();
       }

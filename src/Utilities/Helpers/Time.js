@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { FetchUserData } from './UserHandlers';
 
 export const abstractTime = (str) => {
   const record = parseInt(str);
@@ -20,8 +21,10 @@ export const toMilliSeconds = ({minutes, seconds, milliseconds}) => {
   return msTime;
 }
 
-export const userBestTime = () => {
-  return JSON.parse(localStorage.getItem('user_data')).best_time
+export const userBestTime = async () => {
+  const result = await FetchUserData();
+  console.log(result.best_time)
+  return result.best_time;
 };
 
 export const fetchTimes = async (limit, offset) => {
