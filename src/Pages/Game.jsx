@@ -32,10 +32,14 @@ export default function Game() {
   const [timerInterval, setTimerInterval] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [won, setWon] = useState(false);
+  const [hasUpdated, setHasUpdated] = useState(false)
   
   // State update checking functions
   const isVisible = usePageVisibility();
   const isLoggedIn = useIsLoggedIn()
+  useEffect(() => {
+    isLoggedIn()
+  }, [isLoggedIn])
 
   // Time handling callbacks
     const startTimer = useCallback(() => {
@@ -69,27 +73,30 @@ export default function Game() {
     
     // Check if the user held all the squares to same values
     useEffect(()=> {
-      const allHeld = squares.every(die => die.isHeld)
-      const sameValue = squares.every(die => die.value === squares[0].value)
-      if(allHeld && sameValue) {
-        setWon(true);
+      const allHeld = squares.every(square => square.isHeld)
+      const sameValue = squares.every(square => square.value === squares[0].value)
+      if(allHeld && sameValue && !hasUpdated) {
         stopTimer();
+        setWon(true);
         const msTime = toMilliSeconds(timeCount);
         UpdateHandler(msTime);
-        setIsStarted(false);
+        setHasUpdated(true)
       }
-    }, [squares, stopTimer, timeCount])
+    }, [squares, stopTimer, timeCount, hasUpdated])
 
     // Check if user went away from screen
     useEffect(() => {
-      if (!isOpen && isVisible && isStarted && !timerInterval) startTimer();
+      if(won) {
+        stopTimer();
+      }
+      else if (!isOpen && isVisible && isStarted && !timerInterval) startTimer();
       else if (isOpen || !isVisible ) stopTimer();
-    }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen, timeCount]);
+    }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen]);
 
-    // Checks if the user is loggedIn
+    // Checks if the user is loggedOut, or changes occured to the data in localStorage
     useEffect(() => {
       const handleStorageChange = (e) => {
-        if (e.key === 'user_data') {
+        if (e.key === 'user_token') {
           isLoggedIn()
         }
       };
@@ -112,6 +119,7 @@ export default function Game() {
         rollCount={rollCount}
         setRollCount={setRollCount}
         setIsStarted={setIsStarted}
+        setHasUpdated={setHasUpdated}
         isStarted={isStarted}
         timeCount={timeCount}
         setTimeCount={setTimeCount}

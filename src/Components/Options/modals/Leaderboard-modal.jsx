@@ -7,12 +7,6 @@ import styled from 'styled-components'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 
-// export default function PaginationRounded() {
-//   return (
-    
-//   );
-// }
-
 import {useCallback, useEffect, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -21,14 +15,20 @@ import Modal from '@mui/material/Modal';
 export default function Leaderboard({open, setOpen}) {
   const [boardTimes, setBoardTimes] = useState(null);
   const [countTimes, setCountTimes] = useState(0);
+  const [bestTime, setBestTime] = useState(null)
 
   useEffect(() => {
     const getAllRecordsCount = async () => {
       const allRecords = await fetchTimes();
       setCountTimes(allRecords.length)
     }
-    getAllRecordsCount()
-  }, [])
+    const getUserBestTime =  async () => {
+      const best_time = await userBestTime();
+      setBestTime(abstractTime(best_time))
+    }
+    getAllRecordsCount();
+    getUserBestTime();
+  }, [bestTime])
 
   const [limit, setLimit] = useState(3);
   const [offset, setOffset] = useState(0);
@@ -37,6 +37,12 @@ export default function Leaderboard({open, setOpen}) {
     setPage(value);
     setOffset((value - 1) * 5);
   };
+
+  const recordsHandler = useCallback (async () => {
+    const records = await fetchTimes(limit, offset);
+    setBoardTimes(records)
+  }, [limit, offset])
+  
   const handleOpen = async () => {
     setOpen(true)
     recordsHandler()
@@ -47,10 +53,7 @@ export default function Leaderboard({open, setOpen}) {
     setOffset(0);
   };
   
-  const recordsHandler = useCallback (async () => {
-    const records = await fetchTimes(limit, offset);
-    setBoardTimes(records)
-  }, [limit, offset])
+  
 
   useEffect(() => {
     if(open) {
@@ -76,17 +79,18 @@ export default function Leaderboard({open, setOpen}) {
               </div>
             </Typography> 
               <div className='user-scores'>
-                  Your best Time: <span className='time-record'>{abstractTime(userBestTime())}</span>
+                  Your best Time:
+                  <span className='time-record'>{bestTime}</span>
               </div>
             <div className='leaderboard-scores'>
               <div className='leaderboard-scores-header'>
               <span>#</span><span>name</span><span>time record</span>
               </div>
               {boardTimes ? boardTimes.map((e,i) => (                
-                <div>
-                <span>{i + 1 + offset}</span>
-                <span>{e.username}</span>
-                <span className='time-record'>{abstractTime(e.best_time)}</span>
+                <div key={i}>
+                  <span>{i + 1 + offset}</span>
+                  <span>{e.username}</span>
+                  <span className='time-record'>{abstractTime(e.best_time)}</span>
                 </div>
                 )
                 ):
