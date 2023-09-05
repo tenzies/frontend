@@ -73,8 +73,10 @@ flex-flow: column;
 align-items: center;
 gap: 20px;
 position: absolute;
-max-width: 500px;
-min-width: 350px;
+width: 400px;
+@media (max-width: 575px) {
+  width: 320px;
+}
 left: 50%;
 top: 50%;
 transform: translate(-50%, -50%);

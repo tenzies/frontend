@@ -3,24 +3,33 @@ import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SignupHandler } from '../Utilities/Helpers/UserHandlers';
+import showToastify from '../Utilities/Helpers/Toastify';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import Background from "../Utilities/Assets/Background";
 import styled from "styled-components";
 import Loader from '../Utilities/Assets/Loader';
 
+
 export default function Signup() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
     username: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
   
   const signup = SignupHandler(formData, setIsLoading);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    signup();
+    const {password, confirmPassword} = formData
+    if(password === confirmPassword) {
+      signup();
+    }
+    else {
+      showToastify(400, 'Passwords do not match')
+    }
   }
   const changeHandler = (e) => {
     const {name, value} = e.target;
@@ -57,6 +66,18 @@ export default function Signup() {
                 onChange={changeHandler}
                 />
             </div>
+            <div className='input-container'>
+            <div className='label-container'>
+                <KeyRoundedIcon className='icon left'/>
+                <span>Confirm Password</span>
+              </div>
+              <input
+                type='password'
+                name='confirmPassword'
+                value={formData.confirmPassword}
+                onChange={changeHandler}
+                />
+            </div>
             <button onClick={submitHandler}>{isLoading ? <Loader/> : "Signup"}</button>
             <hr/>
             <p>Already have an account? <Link to="/login">Login</Link></p>
@@ -73,8 +94,10 @@ flex-flow: column;
 align-items: center;
 gap: 20px;
 position: absolute;
-max-width: 500px;
-min-width: 350px;
+width: 400px;
+@media (max-width: 575px) {
+  width: 320px;
+}
 left: 50%;
 top: 50%;
 transform: translate(-50%, -50%);

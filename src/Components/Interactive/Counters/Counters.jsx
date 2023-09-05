@@ -20,6 +20,11 @@ display: flex;
 flex-flow: column;
 gap: 5px;
 position: absolute;
-left: 30px;
 bottom: 30px;
+left: 30px;
+@media (max-width: 575px) {
+  position: fixed;
+  left: 10px;
+  bottom: 15px;
+}
 `

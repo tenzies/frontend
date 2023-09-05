@@ -18,4 +18,11 @@ letter-spacing: 1.5px;
 & svg {
   color: var(--third-color);
 }
+@media (max-width: 575px) {
+  letter-spacing: 1px;
+  font-size: 12px;
+  & svg {
+    font-size: 12px;
+  }
+}
 `

@@ -54,6 +54,10 @@ const MainModal = styled.div`
     cursor: pointer;
     filter: invert(50%);
   }
+  @media (max-width: 575px) {
+    right: 10px;
+    top: 20px;
+  }
 }
 `
 const OptionsContainer = styled.div`

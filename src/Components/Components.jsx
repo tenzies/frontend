@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import Counters from './Interactive/Counters/Counters'
-import Square from './Square/Square'
+import Square from './Interactive/Square/Square'
 import GameButton from './Interactive/Button/GameButton'
 import Options from './Options/Options';
 
@@ -16,11 +16,11 @@ export default function Components (props) {
       <SquaresContainer>
         {props.squares.map((e, i)=> <Square key={i} {...e} {...props} />)}
       </SquaresContainer>
-      <Counters 
-        timeCount={props.timeCount}
-        rollCount={props.rollCount}
-        />
-      <GameButton {...props}/>
+        <GameButton {...props}/>
+        <Counters 
+          timeCount={props.timeCount}
+          rollCount={props.rollCount}
+          />
     </ComponentsContainer>
   )
 }
@@ -32,7 +32,7 @@ align-items: center;
 gap: 10px;
 position: absolute;
 max-width: 500px;
-min-width: 350px;
+min-width: 320px;
 left: 50%;
 top: 50%;
 transform: translate(-50%, -50%);
@@ -46,6 +46,13 @@ h2 {
   color: var(--third-color);
   font-size: 35px;
 }
+@media (max-width: 575px) {
+  padding: 15px;
+  width: 320px;
+  & h2 {
+    font-size: 30px;
+  }
+}
 `
 const SquaresContainer = styled.div`
 display: grid;
@@ -57,4 +64,8 @@ align-content: center;
 align-items: stretch;
 justify-content: center;
 margin-bottom: 10px;
+@media (max-width: 575px) {
+  padding: 10px;
+  gap: 10px;
+}
 `

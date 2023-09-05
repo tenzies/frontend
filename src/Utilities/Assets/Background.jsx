@@ -1,10 +1,29 @@
+import {useState, useEffect} from 'react'
 import Confetti from 'react-confetti';
 import styled from 'styled-components';
 
 export default function Background({won}) {
+    const [windowSize, setWindowSize] = useState({
+        width: window.innerWidth,
+        height: window.innerHeight
+    })
+    useEffect(() => {
+        function handleResize() {
+          setWindowSize({
+            width: window.innerWidth,
+            height: window.innerHeight
+          });
+        }
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
   return (
     <>
-      {won && <Confetti width={window.innerWidth} height={window.innerHeight}/>}
+      {won && <Confetti width={windowSize.width} height={windowSize.height}/>}
       <Area>
             <ul className="circles">
                     <li></li>

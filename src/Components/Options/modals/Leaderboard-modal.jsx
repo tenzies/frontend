@@ -6,7 +6,7 @@ import Loader from '../../../Utilities/Assets/Loader';
 import styled from 'styled-components'
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-
+import rankLogoGenerator from '../../../Utilities/Helpers/RankGenerator';
 import {useCallback, useEffect, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -78,25 +78,30 @@ export default function Leaderboard({open, setOpen}) {
               <EmojiEventsIcon/> <span>Leaderboard</span>
               </div>
             </Typography> 
-              <div className='user-scores'>
+              <div className='user-score'>
                   Your best Time:
                   <span className='time-record'>{bestTime}</span>
               </div>
+            {boardTimes ? 
             <div className='leaderboard-scores'>
               <div className='leaderboard-scores-header'>
-              <span>#</span><span>name</span><span>time record</span>
+              <span>#</span><span>Name</span><span>Time record</span>
               </div>
-              {boardTimes ? boardTimes.map((e,i) => (                
+              {boardTimes.map((e,i) => (                
                 <div key={i}>
-                  <span>{i + 1 + offset}</span>
+                  <span className='rank'>{rankLogoGenerator(i + 1 + offset)}</span>
                   <span>{e.username}</span>
                   <span className='time-record'>{abstractTime(e.best_time)}</span>
                 </div>
                 )
-                ):
-                <Loader/>
-                }
+                )
+              }
               </div>
+              :
+              <div className='loader'>
+                <Loader />
+              </div>
+              }
               { (limit !== 5) && boardTimes ?
                 <button 
                 onClick={() => setLimit(5)}
@@ -110,7 +115,8 @@ export default function Leaderboard({open, setOpen}) {
                       className='pagination'
                       count={Math.ceil(countTimes / 5)}
                       variant="outlined"
-                      shape="rounded" 
+                      shape="rounded"
+                      color="primary"
                       size='small'
                       page={page}
                       onChange={handlePageChange} />
@@ -164,12 +170,34 @@ top: 50%;
 background-color: white;
 padding: 20px;
 border-radius: 10px;
-min-width: 300px;
-max-width: 400px;
+width: 400px;
+@media (max-width: 575px) {
+  width: 320px;
+}
 transform: translate(-50%, -50%);
-.time-record{
-  letter-spacing: 3px;
-  margin-left: 5px;
+.modal-title {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  svg {
+    color: yellow;
+    filter: invert(10%);
+  }
+}
+.user-score {
+  font-size: 18px;
+  font-weight: bold;
+  .time-record {
+    color: #07bc0c;
+    margin-left: 7px;
+  }
+}
+.time-record {
+  letter-spacing: 2px;
 }
 .back-button {
   cursor: pointer;
@@ -186,29 +214,26 @@ transform: translate(-50%, -50%);
   border: 0;
   outline: 0;
 }
-.modal-title {
+.loader {
+  margin-top: 15px; 
+  background-color: var(--fourth-color);
+  opacity: 0.4;
   display: flex;
-  gap: 5px;
   justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  svg {
-    color: yellow;
-    filter: invert(10%);
-  }
+  padding: 20px;
+  border-radius: 5px;
 }
-
 .leaderboard-scores {
   margin-top: 25px;
   display: flex;
   flex-flow: column;
-  gap: 10px;
+  gap: 5px;
   & div {
-    display: flex;
+    border-radius: 5px;
+    display: grid;
+    height: 44px;
+    grid-template-columns: 50px 1fr 1fr;
     padding: 10px;
-    gap: 50px;
     background-color: var(--fourth-color);
     color: white;
     font-weight: 600;
