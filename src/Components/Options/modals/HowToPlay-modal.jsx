@@ -90,7 +90,7 @@ gap: 20px;
 }
 .back-button {
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--third-color);
   position: absolute;
   font-size: 24px;
   left: 20px;

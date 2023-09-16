@@ -1,5 +1,5 @@
 import HowToPlay from "./modals/HowToPlay-modal"
-import Leaderboard from "./modals/Leaderboard-modal"
+import Leaderboard from "./modals/Leaderboard/modal"
 import Logout from './modals/Logout'
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
@@ -81,7 +81,7 @@ h3 {
 }
 .back-button {
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--third-color);
   position: absolute;
   font-size: 24px;
   left: 20px;

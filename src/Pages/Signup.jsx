@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { SignupHandler } from '../Utilities/Helpers/UserHandlers';
-import showToastify from '../Utilities/Helpers/Toastify';
+import isAcceptedCredentials from '../Utilities/Helpers/Validation';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import Background from "../Utilities/Assets/Background";
@@ -23,13 +23,8 @@ export default function Signup() {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    const {password, confirmPassword} = formData
-    if(password === confirmPassword) {
-      signup();
-    }
-    else {
-      showToastify(400, 'Passwords do not match')
-    }
+    const isValid = isAcceptedCredentials(formData)
+    if(isValid) signup();
   }
   const changeHandler = (e) => {
     const {name, value} = e.target;

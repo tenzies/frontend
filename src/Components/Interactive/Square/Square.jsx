@@ -35,8 +35,7 @@ const SquareContainer = styled.div`
     filter: invert(10%)
   }
   &.held {
-    background-color: #59E391 !important;
-    background-color: #59E391 !important;
+    background-color: var(--green-color) !important;
     color: white;
   }
   @media (max-width: 575px) {
