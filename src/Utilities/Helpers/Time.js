@@ -23,7 +23,6 @@ export const toMilliSeconds = ({minutes, seconds, milliseconds}) => {
 
 export const userBestTime = async () => {
   const result = await FetchUserData();
-  console.log(result.best_time)
   return result.best_time;
 };
 

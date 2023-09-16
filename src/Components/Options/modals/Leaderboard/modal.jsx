@@ -1,21 +1,28 @@
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import {abstractTime, userBestTime, fetchTimes} from '../../../Utilities/Helpers/Time';
-import Loader from '../../../Utilities/Assets/Loader';
+import {abstractTime, userBestTime, fetchTimes} from '../../../../Utilities/Helpers/Time';
+import Loader from '../../../../Utilities/Assets/Loader';
 import styled from 'styled-components'
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
-import rankLogoGenerator from '../../../Utilities/Helpers/RankGenerator';
+import rankLogoGenerator from '../../../../Utilities/Helpers/RankGenerator';
 import {useCallback, useEffect, useState} from 'react';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import ScoresTable from './table'
 
 
 export default function Leaderboard({open, setOpen}) {
   const [boardTimes, setBoardTimes] = useState(null);
   const [countTimes, setCountTimes] = useState(0);
   const [bestTime, setBestTime] = useState(null)
+  const [limit, setLimit] = useState(3);
+  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setOffset((value - 1) * 5);
+  };
 
   useEffect(() => {
     const getAllRecordsCount = async () => {
@@ -29,14 +36,6 @@ export default function Leaderboard({open, setOpen}) {
     getAllRecordsCount();
     getUserBestTime();
   }, [bestTime])
-
-  const [limit, setLimit] = useState(3);
-  const [offset, setOffset] = useState(0);
-  const [page, setPage] = useState(1);
-  const handlePageChange = (event, value) => {
-    setPage(value);
-    setOffset((value - 1) * 5);
-  };
 
   const recordsHandler = useCallback (async () => {
     const records = await fetchTimes(limit, offset);
@@ -53,8 +52,6 @@ export default function Leaderboard({open, setOpen}) {
     setOffset(0);
   };
   
-  
-
   useEffect(() => {
     if(open) {
       recordsHandler()
@@ -83,45 +80,21 @@ export default function Leaderboard({open, setOpen}) {
                   <span className='time-record'>{bestTime}</span>
               </div>
             {boardTimes ? 
-            <div className='leaderboard-scores'>
-              <div className='leaderboard-scores-header'>
-              <span>#</span><span>Name</span><span>Time record</span>
-              </div>
-              {boardTimes.map((e,i) => (                
-                <div key={i}>
-                  <span className='rank'>{rankLogoGenerator(i + 1 + offset)}</span>
-                  <span>{e.username}</span>
-                  <span className='time-record'>{abstractTime(e.best_time)}</span>
-                </div>
-                )
-                )
-              }
-              </div>
+              <ScoresTable
+                boardTimes={boardTimes}
+                rankLogoGenerator={rankLogoGenerator}
+                offset={offset}
+                limit={limit}
+                setLimit={setLimit}
+                page={page}
+                handlePageChange={handlePageChange}
+                countTimes={countTimes}
+              />
               :
               <div className='loader'>
                 <Loader />
               </div>
               }
-              { (limit !== 5) && boardTimes ?
-                <button 
-                onClick={() => setLimit(5)}
-                className='show-more'
-                >
-                Show more
-                </button>
-                :
-                <Stack spacing={2} className='pagination-container'>
-                    <Pagination
-                      className='pagination'
-                      count={Math.ceil(countTimes / 5)}
-                      variant="outlined"
-                      shape="rounded"
-                      color="primary"
-                      size='small'
-                      page={page}
-                      onChange={handlePageChange} />
-                 </Stack>
-                }
               </LeaderboardContainer>
       </Modal>
     </>
@@ -189,6 +162,7 @@ transform: translate(-50%, -50%);
   }
 }
 .user-score {
+  margin-top: 10px;
   font-size: 18px;
   font-weight: bold;
   .time-record {
@@ -201,7 +175,7 @@ transform: translate(-50%, -50%);
 }
 .back-button {
   cursor: pointer;
-  color: var(--fourth-color);
+  color: var(--third-color);
   position: absolute;
   font-size: 24px;
   left: 20px;
@@ -222,53 +196,5 @@ transform: translate(-50%, -50%);
   justify-content: center;
   padding: 20px;
   border-radius: 5px;
-}
-.leaderboard-scores {
-  margin-top: 25px;
-  display: flex;
-  flex-flow: column;
-  gap: 5px;
-  & div {
-    border-radius: 5px;
-    display: grid;
-    height: 44px;
-    grid-template-columns: 50px 1fr 1fr;
-    padding: 10px;
-    background-color: var(--fourth-color);
-    color: white;
-    font-weight: 600;
-    justify-content: start;
-    &:first-child {
-      background-color: var(--second-color);
-    }
-    span {
-      min-width: 50px;
-      display: block;
-    }
-  }
-}
-.show-more {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--third-color);
-  width: fit-content;
-  font-weight: bold;
-  border: 0;
-  border-radius: 5px;
-  padding: 15px;
-  margin-top: 10px;
-  color: white;
-  transition: 0.5s;
-  &:hover {
-    cursor: pointer;
-    background-color: var(--first-color);
-  }
-}
-.pagination-container {
-  margin-top: 10px;
-  ul {
-    justify-content: center;
-  }
 }
 `
