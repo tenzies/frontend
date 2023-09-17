@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie'
 import showToastify from './Toastify';
 
 const url = process.env.REACT_APP_SERVER_URL;
@@ -45,7 +46,7 @@ export function LoginHandler(formData, setIsLoading) {
     showToastify(data.status, data.msg);
     if(data.status === 200) {
       setTimeout(() => {
-        localStorage.setItem('user_token', data.token);
+        Cookies.set('user_token', data.token);
         setIsLoading(false)
         navigate('/');
       }, 2000)}
@@ -55,9 +56,37 @@ export function LoginHandler(formData, setIsLoading) {
   }
 }
 
-export async function FetchUserData() {
-  if(localStorage.getItem('user_token')) {
-    const token = localStorage.getItem('user_token');
+
+export function LogoutHandler() {
+  const navigate = useNavigate();
+  return function logout() {
+    Cookies.remove('user_token');
+    navigate('/login');
+  }
+}
+
+export async function UpdateHandler(current_time) {
+  const token = Cookies.get('user_token');
+  const { data } = await axios({
+    method: 'PUT',
+    url: url + '/api/update',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    data: {
+      current_time: current_time
+    }
+  });
+  if(data.status === 204) {
+    Cookies.set('user_token', data.token);
+    showToastify(data.status, data.msg);
+  }
+  return data
+}
+
+export async function fetchUserData() {
+  if(Cookies.get('user_token')) {
+    const token = Cookies.get('user_token');
     const { data } = await axios({
       url: url + '/api/user-data',
       method: 'GET',
@@ -72,50 +101,10 @@ export async function FetchUserData() {
   }
 }
 
-export function LogoutHandler() {
-  const navigate = useNavigate();
-  return function logout() {
-    localStorage.removeItem('user_token');
-    navigate('/login');
-  }
-}
-
-export async function UpdateHandler(current_time) {
-  const token = localStorage.getItem('user_token');
-  const { data } = await axios({
-    method: 'PUT',
-    url: url + '/api/update',
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    data: {
-      current_time: current_time
-    }
-  });
-  if(data.status === 204) {
-    localStorage.setItem('user_token', data.token);
-    showToastify(data.status, data.msg);
-  }
-  return data
-}
-
-export async function GetTimeRecords(limit, offset) {
-  try {
-    const { data } = await axios.post('/api/time-records',{
-      limit: limit,
-      offset: offset
-    });
-    return data;
-  }
-  catch (e) {
-    console.log('Failed to get time records Error: ', e)
-  }
-}
-
 export function useIsLoggedIn() {
   const navigate = useNavigate()
   return function checkLogin() {
-    const isLoggedIn = localStorage.getItem('user_token');
+    const isLoggedIn = Cookies.get('user_token');
     if(!isLoggedIn) {
       navigate('/login')
     }

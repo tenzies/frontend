@@ -2,9 +2,7 @@ import showToastify from './Toastify';
 import BadWordsFilter from 'bad-words';
 
 const isAcceptedCredentials = ({username, password, confirmPassword}) => {
-  
-  
-  const checkConfirm = password === confirmPassword
+  const checkConfirm = password === confirmPassword;
   if(checkConfirm) {
     const checkPassLength = (3 <= password.length && password.length <= 20);
     if(checkPassLength) {

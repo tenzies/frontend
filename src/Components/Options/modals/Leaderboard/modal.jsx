@@ -1,7 +1,7 @@
 import ArrowCircleLeftRoundedIcon from '@mui/icons-material/ArrowCircleLeftRounded';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
-import {abstractTime, userBestTime, fetchTimes} from '../../../../Utilities/Helpers/Time';
+import {abstractTime, userBestTime, getTimeRecords} from '../../../../Utilities/Helpers/Time';
 import Loader from '../../../../Utilities/Assets/Loader';
 import styled from 'styled-components'
 import rankLogoGenerator from '../../../../Utilities/Helpers/RankGenerator';
@@ -20,7 +20,7 @@ export default function Leaderboard({open, setOpen}) {
 
   useEffect(() => {
     const getAllRecordsCount = async () => {
-      const allRecords = await fetchTimes();
+      const allRecords = await getTimeRecords();
       setCountTimes(allRecords.length)
     }
     const getUserBestTime =  async () => {
@@ -32,7 +32,7 @@ export default function Leaderboard({open, setOpen}) {
   }, [bestTime])
 
   const recordsHandler = useCallback (async () => {
-    const records = await fetchTimes(limit, offset);
+    const records = await getTimeRecords(limit, offset);
     setBoardTimes(records)
   }, [limit, offset])
   

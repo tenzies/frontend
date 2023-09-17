@@ -102,7 +102,7 @@ export default function Game() {
       else if (isOpen || !isVisible ) stopTimer();
     }, [won, isVisible, isStarted, timerInterval, startTimer, stopTimer, isOpen]);
 
-    // Checks if the user is loggedOut, or changes occured to the data in localStorage
+    // Checks if the user is loggedOut, or changes occured to the data in cookies
     useEffect(() => {
       const handleStorageChange = (e) => {
         if (e.key === 'user_token') {
