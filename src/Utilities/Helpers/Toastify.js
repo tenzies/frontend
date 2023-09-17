@@ -29,6 +29,9 @@ const showToastify = (statusCode, msg) => {
     case 404:
       toast.error(msg, toastifyOptions);
       break;
+    case 408:
+      toast.info(msg, toastifyOptions);
+      break;
     default:
       toast.error('Invalid status Code', toastifyOptions)
       break;
