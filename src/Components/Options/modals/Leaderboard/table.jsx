@@ -18,6 +18,7 @@ const StyledTableCell = muiStyled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 16,
+    fontWeight: '600'
   },
 }));
 
@@ -34,6 +35,13 @@ const StyledTableRow = muiStyled(TableRow)(({ theme }) => ({
 
 export default function ScoresTable(props) {
   const [userTime, setUserTime] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    props.setOffset((value - 1) * 5);
+  };
+
   useEffect(() => {
     let time = 0;
     const getUserTime = async () => {
@@ -42,16 +50,16 @@ export default function ScoresTable(props) {
     }
     getUserTime()
   }, [userTime])
-  console.log(userTime)
+
   return (
     <TableStyle>
       <TableContainer>
         <Table sx={{ maxWidth: '100%', margin: '20px 0', borderRadius: '5px' }} aria-label="customized table">
           <TableHead>
             <TableRow className='head-row'>
-              <StyledTableCell align="center" width={'30px'}>#</StyledTableCell>
-              <StyledTableCell align="center" width={'150px'}>Name</StyledTableCell>
-              <StyledTableCell align="center" width={'150px'}>Time Record&nbsp;(s)</StyledTableCell>
+              <StyledTableCell align="center" maxWidth={'30px'}>#</StyledTableCell>
+              <StyledTableCell align="center" maxWidth={'150px'}>Name</StyledTableCell>
+              <StyledTableCell align="center" maxWidth={'150px'}>Time Record&nbsp;(s)</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -80,12 +88,11 @@ export default function ScoresTable(props) {
                       <Pagination
                         className='pagination'
                         count={Math.ceil(props.countTimes / 5)}
-                        variant="outlined"
                         shape="rounded"
                         color="primary"
                         size='small'
-                        page={props.page}
-                        onChange={props.handlePageChange} />
+                        page={page}
+                        onChange={handlePageChange} />
                   </Stack>
             }
       </TableContainer>
@@ -99,7 +106,7 @@ const TableStyle = styled.div`
   height: 60px;
 }
 .user-row {
-  background-color: var(--green-color);
+  background-color: var(--green-color) !important;
   td {
     color: white;
   }
@@ -126,6 +133,12 @@ const TableStyle = styled.div`
   margin-top: 10px;
   ul {
     justify-content: center;
+    // li {
+    //   button {
+    //     background-color: var(--second-color);
+    //     color: white;
+    //   }
+    // }
   }
 }
 `

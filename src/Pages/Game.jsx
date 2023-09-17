@@ -2,10 +2,11 @@ import styled from 'styled-components';
 import { useEffect, useState, useCallback } from 'react';
 import { generateOneSquare, generateSquares } from '../Utilities/Helpers/SquareGenerators';
 import { UpdateHandler, useIsLoggedIn } from '../Utilities/Helpers/UserHandlers';
-import {toMilliSeconds} from '../Utilities/Helpers/Time'
+import { toMilliSeconds } from '../Utilities/Helpers/Time'
 import { ToastContainer } from 'react-toastify';
 import Background from "../Utilities/Assets/Background";
 import Components from '../Components/Components';
+import showToastify from '../Utilities/Helpers/Toastify';
 
 const usePageVisibility = () => {
   const [isVisible, setIsVisible] = useState(true);
@@ -33,6 +34,7 @@ export default function Game() {
   const [isOpen, setIsOpen] = useState(false);
   const [won, setWon] = useState(false);
   const [hasUpdated, setHasUpdated] = useState(false)
+
   // State update checking functions
   const isVisible = usePageVisibility();
   const isLoggedIn = useIsLoggedIn()
@@ -70,7 +72,7 @@ export default function Game() {
       setSquares(newDice)
     }
     
-    // Check if the user held all the squares to same values
+    // Check if the user held all the squares to same values or exceeded time
     useEffect(()=> {
       const allHeld = squares.every(square => square.isHeld)
       const sameValue = squares.every(square => square.value === squares[0].value)
@@ -80,6 +82,14 @@ export default function Game() {
         const msTime = toMilliSeconds(timeCount);
         UpdateHandler(msTime);
         setHasUpdated(true)
+      }
+      if(timeCount.minutes === 60) {
+        stopTimer();
+        setTimeCount({ milliseconds: 0, seconds: 0, minutes: 0 });
+        setRollCount(0);
+        setSquares(generateSquares());
+        setIsStarted(false);
+        showToastify(408, 'Game refreshed: Maximum time exceeded');
       }
     }, [squares, stopTimer, timeCount, hasUpdated])
 

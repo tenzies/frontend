@@ -118,10 +118,12 @@ h2 {
     gap: 5px;
   }
   input {
+    background-color: #eee;
     border: 0;
     border-radius: 5px;
     padding: 10px;
     height: 35px;
+    transition: 0.5s;
     &:focus {
       border: 2px solid var(--third-color);
       outline: 0;

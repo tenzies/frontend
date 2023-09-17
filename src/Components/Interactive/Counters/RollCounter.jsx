@@ -13,10 +13,11 @@ const RollsContaniner = styled.div`
 color: white;
 display: flex;
 align-items: center;
-gap: 5px;
+gap: 3px;
 letter-spacing: 1.5px;
 & svg {
   color: var(--third-color);
+  margin-right: 3px;
 }
 @media (max-width: 575px) {
   letter-spacing: 1px;

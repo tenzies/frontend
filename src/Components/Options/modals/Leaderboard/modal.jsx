@@ -17,12 +17,6 @@ export default function Leaderboard({open, setOpen}) {
   const [bestTime, setBestTime] = useState(null)
   const [limit, setLimit] = useState(3);
   const [offset, setOffset] = useState(0);
-  const [page, setPage] = useState(1);
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
-    setOffset((value - 1) * 5);
-  };
 
   useEffect(() => {
     const getAllRecordsCount = async () => {
@@ -84,10 +78,9 @@ export default function Leaderboard({open, setOpen}) {
                 boardTimes={boardTimes}
                 rankLogoGenerator={rankLogoGenerator}
                 offset={offset}
+                setOffset={setOffset}
                 limit={limit}
                 setLimit={setLimit}
-                page={page}
-                handlePageChange={handlePageChange}
                 countTimes={countTimes}
               />
               :
@@ -166,7 +159,7 @@ transform: translate(-50%, -50%);
   font-size: 18px;
   font-weight: bold;
   .time-record {
-    color: #07bc0c;
+    color: var(--green-color);
     margin-left: 7px;
   }
 }

@@ -102,6 +102,8 @@ h2 {
     gap: 5px;
   }
   input {
+    background-color: #eee;
+    transition: var(--transition-time);
     border: 0;
     border-radius: 5px;
     padding: 10px;
