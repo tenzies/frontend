@@ -2,7 +2,8 @@ import {useEffect, useState} from 'react';
 import { styled as muiStyled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import {abstractTime, userBestTime} from '../../../../Utilities/Helpers/Time';
+import {abstractTime} from '../../../../Utilities/Helpers/Time';
+import { fetchUserData } from '../../../../Utilities/Helpers/UserHandlers';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -34,7 +35,7 @@ const StyledTableRow = muiStyled(TableRow)(({ theme }) => ({
 }));
 
 export default function ScoresTable(props) {
-  const [userTime, setUserTime] = useState(0);
+  const [username, setUserName] = useState(0);
   const [page, setPage] = useState(1);
 
   const handlePageChange = (event, value) => {
@@ -43,13 +44,12 @@ export default function ScoresTable(props) {
   };
 
   useEffect(() => {
-    let time = 0;
-    const getUserTime = async () => {
-      time = await userBestTime();
-      setUserTime(time);
+    const getUserName = async () => {
+      const {username} = await fetchUserData();
+      setUserName(username);
     }
-    getUserTime()
-  }, [userTime])
+    getUserName()
+  }, [username])
 
   return (
     <TableStyle>
@@ -66,7 +66,7 @@ export default function ScoresTable(props) {
             {props.boardTimes.map((e, idx) => (
               <StyledTableRow
                 key={idx}
-                className={e.best_time === userTime ? 'user-row' : ''}
+                className={e.username === username ? 'user-row' : ''}
                 >
                 <StyledTableCell align="center">{props.rankLogoGenerator(idx + props.offset + 1)}</StyledTableCell>
                 <StyledTableCell align="center">{e.username}</StyledTableCell>

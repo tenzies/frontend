@@ -119,11 +119,11 @@ h2 {
   }
   input {
     background-color: #eee;
+    transition: var(--transition-time);
     border: 0;
     border-radius: 5px;
     padding: 10px;
     height: 35px;
-    transition: 0.5s;
     &:focus {
       border: 2px solid var(--third-color);
       outline: 0;
